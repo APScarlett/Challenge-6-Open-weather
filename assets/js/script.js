@@ -13,5 +13,18 @@ function currentWeather(cityName){
         console.log(data)
     })
 }
+function fivedayForecast(){
+    var url=`api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiKey}`
+
+    fetch(url)
+    .then(function(response){
+        return response.json()
+    })
+    .then(function(data){
+        console.log(data)
+    })
+}
+
+
 //calls the currentWeather function
 currentWeather('Chicago')
