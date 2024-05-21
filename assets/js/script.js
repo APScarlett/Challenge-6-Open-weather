@@ -8,6 +8,25 @@ var fiveDayEl=document.getElementById("five-day")
 var searchInputEl=document.getElementById("search-input")
 //variable for the search button
 var searchBtnEl=document.getElementById("search-btn")
+var sectionBtnEl=document.getElementById("historyBtn")
+var historyArr = JSON.parse(localStorage.getItem("history")) || []
+
+    displayHistory()
+function displayHistory(){
+    sectionBtnEl.innerHTML=""
+    for(var i =0; i < historyArr.length; i ++){
+        sectionBtnEl.innerHTML=sectionBtnEl.innerHTML+` <button type="button" class="btn bg-secondary w-100 mx-3 my-1">${historyArr[i]}</button>`
+    }
+}
+function populateData(event){
+    var currentButton=event.target
+    var cityName=currentButton.textContent
+    currentWeather(cityName)
+    fivedayForecast(cityName)
+}
+
+sectionBtnEl.addEventListener("click", populateData)
+
 //function to pull weathermap api
 function currentWeather(cityName){
     var url=`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=imperial`
@@ -18,6 +37,13 @@ function currentWeather(cityName){
     })
     .then(function(data){
         console.log(data)
+
+        if(historyArr.includes(data.name)===false){
+            historyArr.push(data.name)
+            localStorage.setItem("history", JSON.stringify(historyArr))
+            displayHistory()
+        }
+
             //dynamic weather information
         dashboardEl.innerHTML=` <h3> ${data.name} ${dayjs.unix(data.dt).format("MM/DD/YYYY")} <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt=""></h3>
         <p>Temp:${data.main.temp}</p>
@@ -90,7 +116,14 @@ function fivedayForecast(cityName){
 }
 
 
-//calls the currentWeather function
-currentWeather('Chicago')
-//calls fivedayForecast
-fivedayForecast('Chicago')
+
+
+function search(){
+    var cityName=searchInputEl.value
+         //calls the currentWeather function
+        currentWeather(cityName)
+        //calls fivedayForecast
+        fivedayForecast(cityName)
+}
+
+searchBtnEl.addEventListener("click", search)
