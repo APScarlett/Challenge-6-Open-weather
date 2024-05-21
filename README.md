@@ -32,7 +32,7 @@
  License Name MIT
   
   ## Tests
-  To test this program please do the following:
+  To test this program please do the following: N/A
 node index.js
   
 ## Questions
